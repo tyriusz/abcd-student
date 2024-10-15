@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     cleanWs()
-                    git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'sca-scan'
+                    git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
                 }
             }
         }
