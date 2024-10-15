@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh 'mkdir -p results/'
                 sh '''
-                    docker run --rm --name osv-scanner \
+                    docker run --name osv-scanner \
                         -v ${WORKSPACE}:/app \
                         -w /app \
                         ghcr.io/google/osv-scanner:latest \
