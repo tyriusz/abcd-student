@@ -25,7 +25,7 @@ pipeline {
                     docker run --rm --name osv-scanner \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
-                        --lockfile=/app/package-lock.json
+                        --lockfile=/app/package-lock.json \
                         --json=/app/results/osv-json-report.json
                     '''
             }
