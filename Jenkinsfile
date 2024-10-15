@@ -24,7 +24,6 @@ pipeline {
                 sh '''
                     docker run --rm --name osv-scanner \
                         -v ${WORKSPACE}:/app \
-//                         -w /app \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=package-lock.json
                     '''
