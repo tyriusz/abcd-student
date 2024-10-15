@@ -22,11 +22,11 @@ pipeline {
             steps {
                 sh 'mkdir -p results/'
                 sh '''
-                    docker run --name osv-scanner \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/.osv:/osv/wrk/:rw \
-                        -t ghcr.io/google/osv-scanner:latest \
-                         ghcr.io/google/osv-scanner:latest bash -c \
-                         --lockfile=package-lock.json
+                    docker run --rm --name osv-scanner \
+                        -v ${WORKSPACE}:/app \
+                        -w /app \
+                        ghcr.io/google/osv-scanner:latest \
+                        --lockfile=package-lock.json
                     '''
             }
             post {
