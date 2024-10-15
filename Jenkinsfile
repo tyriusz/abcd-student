@@ -23,8 +23,7 @@ pipeline {
                 sh 'mkdir -p results/'
                 sh '''
                     docker run --name osv-scanner \
-                        -v ${WORKSPACE}:/app \
-                        -w /app \
+                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=package-lock.json
                     '''
