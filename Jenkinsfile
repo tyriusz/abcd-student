@@ -4,14 +4,14 @@ pipeline {
         skipDefaultCheckout(true)
     }
     stages {
-//         stage('Code checkout from GitHub main') {
-//             steps {
-//                 script {
-//                     cleanWs()
-//                     git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
-//                 }
-//             }
-//         }
+        stage('Code checkout from GitHub main') {
+            steps {
+                script {
+                    cleanWs()
+                    git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
+                }
+            }
+        }
         stage('[BEFORE TESTS]') {
             steps {
                 echo 'Hello!!'
@@ -68,7 +68,7 @@ pipeline {
                         docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
                         docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
                         docker stop zap juice-shop
-                        docker rm zap
+                        docker rm zap juice-shop
                     '''
                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
                        productName: 'Juice Shop',
