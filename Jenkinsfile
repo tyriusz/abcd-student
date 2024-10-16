@@ -12,17 +12,17 @@ pipeline {
 //                 }
 //             }
 //         }
-        stage('Example') {
+        stage('[BEFORE TESTS]') {
             steps {
                 echo 'Hello!!'
                 sh 'whoami'
+                sh 'mkdir -p results/'
             }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
-                sh 'mkdir -p results/'
                 sh '''
-                    docker run --rm --name osv-scanner \
+                    docker run --name osv-scanner \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
@@ -31,15 +31,22 @@ pipeline {
                         || true
                     '''
             }
-            post {
-                always {
-                    echo 'OSV-Scanner finished.'
-                }
-            }
+             post {
+                 always {
+                     sh '''
+                         docker cp osv-scanner:/app/osv/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
+                         docker stop osv-scanner
+                         docker rm osv-scanner
+                     '''
+                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'OSV Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
+                 }
+             }
         }
         stage('[ZAP] Baseline passive-scan') {
             steps {
-                sh 'mkdir -p results/'
                 sh '''
                     docker run --name juice-shop -d \
                         -p 3000:3000 \
@@ -61,6 +68,7 @@ pipeline {
                         docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
                         docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
                         docker stop zap juice-shop
+                        docker rm zap
                     '''
                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
                        productName: 'Juice Shop',
