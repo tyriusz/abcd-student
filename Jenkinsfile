@@ -26,7 +26,8 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
-                        --format json=/app/osv-json-report.json
+                        --format=json \
+                        --output=/app/osv-json-report.json
                     '''
             }
             post {
