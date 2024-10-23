@@ -49,6 +49,7 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh '''
+                    docker pull trufflesecurity/trufflehog:latest || true
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
@@ -58,19 +59,19 @@ pipeline {
                         || true
                     '''
             }
-             post {
-                 always {
-                     sh '''
-                         docker cp trufflehog:/app/reports/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
-                         docker stop trufflehog
-                         docker rm trufflehog
-                     '''
-                     defectDojoPublisher(artifact: 'results/trufflehog-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Trufflehog Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
-                 }
-             }
+//              post {
+//                  always {
+//                      sh '''
+//                          docker cp trufflehog:/app/reports/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
+//                          docker stop trufflehog
+//                          docker rm trufflehog
+//                      '''
+//                      defectDojoPublisher(artifact: 'results/trufflehog-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Trufflehog Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+//                  }
+//              }
         }
 
 
