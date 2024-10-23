@@ -4,14 +4,14 @@ pipeline {
         skipDefaultCheckout(true)
     }
     stages {
-//         stage('Code checkout from GitHub main') {
-//             steps {
-//                 script {
-//                     cleanWs()
-//                     git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
-//                 }
-//             }
-//         }
+        stage('Code checkout from GitHub main') {
+            steps {
+                script {
+                    cleanWs()
+                    git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
+                }
+            }
+        }
         stage('[BEFORE TESTS]') {
             steps {
                 echo 'Hello!!'
