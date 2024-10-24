@@ -60,7 +60,6 @@ pipeline {
              post {
                  always {
                      sh '''
-                         ls
                          docker cp trufflehog:/app/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
                          docker stop trufflehog
                          docker rm trufflehog
