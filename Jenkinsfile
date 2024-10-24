@@ -54,7 +54,7 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
-                        --json > trufflehog-report.json \
+                        --json trufflehog-report.json \
                         || true
                     '''
             }
