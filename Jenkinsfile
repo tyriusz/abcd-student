@@ -53,7 +53,7 @@ pipeline {
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        sh -c "mkdir -p /app && trufflehog filesystem /app --json > /app/trufflehog-report.json" \
+                        /bin/bash -c "mkdir -p /app && trufflehog filesystem /app --json > /app/trufflehog-report.json" \
                         || true
                     '''
             }
