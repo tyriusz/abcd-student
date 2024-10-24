@@ -49,12 +49,11 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh '''
-                    docker pull trufflesecurity/trufflehog:latest || true
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
-                        --json /app/trufflehog-report.json \
+                        -j /app/trufflehog-report.json \
                         || true
                     '''
             }
