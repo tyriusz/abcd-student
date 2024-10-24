@@ -51,11 +51,9 @@ pipeline {
                 sh '''
                     docker pull trufflesecurity/trufflehog:latest || true
                     docker run --name trufflehog \
-                        mkdir -p /app/ \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app \
-                        --json > /app/trufflehog-report.json \
+                        mkdir -p /app && trufflehog filesystem /app --json > /app/trufflehog-report.json \
                         || true
                     '''
             }
