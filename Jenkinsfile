@@ -50,10 +50,10 @@ pipeline {
             steps {
                 sh '''
                     docker pull trufflesecurity/trufflehog:latest || true
-                    docker run --rm \
+                    docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        /bin/bash -c 'mkdir -p /app/reports && trufflehog filesystem /app --json > /app/reports/trufflehog-report.json' \
+                        --json > /app/trufflehog-report.json' \
                         || true
                     '''
             }
