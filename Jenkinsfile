@@ -54,23 +54,23 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
-                        --json > /app/reports/trufflehog-report.json \
+                        --json /app/reports/trufflehog-report.json \
                         || true
                     '''
             }
-//              post {
-//                  always {
-//                      sh '''
-//                          docker cp trufflehog:/app/reports/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
-//                          docker stop trufflehog
-//                          docker rm trufflehog
-//                      '''
+             post {
+                 always {
+                     sh '''
+                         docker cp trufflehog:/app/reports/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
+                         docker stop trufflehog
+                         docker rm trufflehog
+                     '''
 //                      defectDojoPublisher(artifact: 'results/trufflehog-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Trufflehog Scan',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
-//                  }
-//              }
+                 }
+             }
         }
 
 
