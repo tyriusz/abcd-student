@@ -53,7 +53,6 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
-                        -j \
                         || true
                     '''
             }
