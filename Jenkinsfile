@@ -54,14 +54,14 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
-                        --json > /app/reports/trufflehog-report.json \
+                        --json > /app/trufflehog-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         docker cp trufflehog:/app/reports/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
+                         docker cp trufflehog:/app/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                      '''
