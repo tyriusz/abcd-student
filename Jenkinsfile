@@ -54,21 +54,21 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > trufflehog-report.json \
+                        > trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         cat trufflehog-report.json
+                         cat trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                      '''
-//                      defectDojoPublisher(artifact: 'results/trufflehog-report2.json',
-//                         productName: 'Juice Shop',
-//                         scanType: 'Trufflehog Scan',
-//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                     defectDojoPublisher(artifact: 'trufflehog-secret-scan-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'Trufflehog Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
