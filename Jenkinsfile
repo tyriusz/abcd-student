@@ -50,9 +50,10 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
+                        pwd \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app -j
+                        filesystem /app -j \
                         pwd \
                         ls \
                         || true
