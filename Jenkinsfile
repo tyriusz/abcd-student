@@ -51,29 +51,27 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/reports:/host-output:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
                         > trufflehog-secret-scan-report.json \
                         || true
-
-                    cp trufflehog-secret-scan-report.json /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/reports/trufflehog-secret-scan-report.json
                     '''
             }
-//              post {
-//                  always {
-//                      sh '''
-//                          cat trufflehog-secret-scan-report.json
-//                          docker stop trufflehog
-//                          docker rm trufflehog
-//                      '''
+             post {
+                 always {
+                     sh '''
+                         cat trufflehog-secret-scan-report.json
+                         cp trufflehog-secret-scan-report.json /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/reports/trufflehog-secret-scan-report.json
+                         docker stop trufflehog
+                         docker rm trufflehog
+                        '''
 //                      defectDojoPublisher(artifact: 'trufflehog-secret-scan-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Trufflehog Scan',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
-//                  }
-//              }
+                 }
+             }
         }
 
 //         stage('[ZAP] Baseline passive-scan') {
