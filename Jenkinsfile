@@ -52,8 +52,9 @@ pipeline {
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app -j \
-                        > trufflehog-report.json \
+                        filesystem /app \
+                        -j \
+                        > trufflehog-report2.json \
                         || true
                     '''
             }
@@ -64,11 +65,8 @@ pipeline {
                          ls
                          docker stop trufflehog
                          docker rm trufflehog
-                         cd results
-                         pwd
-                         ls
                      '''
-//                      defectDojoPublisher(artifact: 'results/trufflehog-report.json',
+//                      defectDojoPublisher(artifact: 'results/trufflehog-report2.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Trufflehog Scan',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
