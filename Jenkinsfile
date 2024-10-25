@@ -51,10 +51,11 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        pwd \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app -j
-                        pwd
-                        ls
+                        pwd \
+                        ls \
                         || true
                     '''
             }
