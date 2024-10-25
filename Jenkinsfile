@@ -62,7 +62,6 @@ pipeline {
                  always {
                      sh '''
                          cat trufflehog-secret-scan-report.json
-                         cp trufflehog-secret-scan-report.json /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/reports/trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
