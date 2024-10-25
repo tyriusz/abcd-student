@@ -53,7 +53,6 @@ pipeline {
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app -j
-                        > trufflehog-report.json
                         pwd
                         ls
                         || true
@@ -62,8 +61,6 @@ pipeline {
              post {
                  always {
                      sh '''
-                         whoami
-                         pwd
                          docker cp trufflehog:/app/trufflehog-report.json ${WORKSPACE}/results/trufflehog-report.json
                          docker stop trufflehog
                          docker rm trufflehog
