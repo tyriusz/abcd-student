@@ -54,7 +54,7 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > /app/trufflehog-report.json \
+                        > trufflehog-report.json \
                         || true
                     '''
             }
