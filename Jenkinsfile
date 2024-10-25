@@ -51,6 +51,7 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/reports:/host-output:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
