@@ -54,16 +54,14 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > trufflehog-report3.json \
+                        > /app/trufflehog-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         pwd
-                         ls
-                         cat trufflehog-report3.json
+                         cat trufflehog-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                      '''
