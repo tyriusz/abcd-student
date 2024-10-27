@@ -53,14 +53,14 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > /results/trufflehog-secret-scan-report.json \
+                        > results/trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         cat /results/trufflehog-secret-scan-report.json
+                         cat results/trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
