@@ -33,6 +33,10 @@ pipeline {
             }
              post {
                  always {
+                     sh '''
+                         docker stop osv-scanner
+                         docker rm osv-scanner
+                        '''
 //                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'OSV Scan',
