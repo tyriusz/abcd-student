@@ -37,7 +37,6 @@ pipeline {
                          docker cp osv-scanner:/app/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
                          docker stop osv-scanner
                          docker rm osv-scanner
-                         rm osv-json-report.json
                      '''
                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
                         productName: 'Juice Shop',
