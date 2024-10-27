@@ -27,14 +27,14 @@ pipeline {
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/app/osv/osv-json-report.json \
+                        --output=/app/reports/osv-json-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         docker cp osv-scanner:/app/osv/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
+                         docker cp osv-scanner:/app/reports/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
                          docker stop osv-scanner
                          docker rm osv-scanner
                      '''
@@ -53,18 +53,18 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > trufflehog-secret-scan-report.json \
+                        > /results/trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         cat trufflehog-secret-scan-report.json
+                         cat /results/trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-                     defectDojoPublisher(artifact: 'trufflehog-secret-scan-report.json',
+                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
                         productName: 'Juice Shop',
                         scanType: 'Trufflehog Scan',
                         engagementName: 'piotr.tyrala.mail@gmail.com')
