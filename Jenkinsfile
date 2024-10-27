@@ -38,10 +38,10 @@ pipeline {
                          docker stop osv-scanner
                          docker rm osv-scanner
                      '''
-                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'OSV Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
+//                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'OSV Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
@@ -64,10 +64,10 @@ pipeline {
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Trufflehog Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
+//                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Trufflehog Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
@@ -96,10 +96,10 @@ pipeline {
                         docker stop zap juice-shop
                         docker rm zap juice-shop
                     '''
-                    defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
-                       productName: 'Juice Shop',
-                       scanType: 'ZAP Scan',
-                       engagementName: 'piotr.tyrala.mail@gmail.com')
+//                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
+//                        productName: 'Juice Shop',
+//                        scanType: 'ZAP Scan',
+//                        engagementName: 'piotr.tyrala.mail@gmail.com')
                 }
             }
         }
