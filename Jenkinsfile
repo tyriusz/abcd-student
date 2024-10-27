@@ -23,18 +23,18 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v ${WORKSPACE}:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/app/osv/osv-json-report.json \
+                        --output=/app/reports/osv-json-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         docker cp osv-scanner:/app/osv/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
+                         docker cp osv-scanner:/app/reports/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
                          docker stop osv-scanner
                          docker rm osv-scanner
                      '''
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v ${WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
@@ -82,7 +82,7 @@ pipeline {
                 sh '''
                     docker run --name zap \
                         --add-host=host.docker.internal:host-gateway \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/.zap:/zap/wrk/:rw \
+                        -v ${WORKSPACE}/.zap:/zap/wrk/:rw \
                         -t ghcr.io/zaproxy/zaproxy:stable bash -c \
                         "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
                         || true
