@@ -4,7 +4,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
     environment {
-            DATA_VOLUME = 'jenkins_data_volume'
+            DATA_VOLUME = 'jenkins_juice_shop_test_volume'
     }
     stages {
         stage('Code checkout from GitHub main') {
@@ -101,6 +101,11 @@ pipeline {
 //                        engagementName: 'piotr.tyrala.mail@gmail.com')
                 }
             }
+        }
+    }
+    post {
+        always {
+            sh 'docker volume rm $DATA_VOLUME || true'
         }
     }
 }
