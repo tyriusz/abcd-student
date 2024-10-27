@@ -35,6 +35,7 @@ pipeline {
                  always {
                      sh '''
                          docker cp osv-scanner:/app/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
+                         docker exec osv-scanner rm /app/osv-json-report.json
                          docker stop osv-scanner
                          docker rm osv-scanner
                      '''
