@@ -3,12 +3,16 @@ pipeline {
     options {
         skipDefaultCheckout(true)
     }
+    environment {
+            DATA_VOLUME = 'jenkins_data_volume'
+    }
     stages {
         stage('Code checkout from GitHub main') {
             steps {
                 script {
                     cleanWs()
                     git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
+                    sh 'docker run --rm -v ${WORKSPACE}:/source -v $DATA_VOLUME:/data busybox cp -r /source/. /data/'
                 }
             }
         }
@@ -23,7 +27,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v ${WORKSPACE}:/app \
+                        -v $DATA_VOLUME:/app \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
@@ -33,11 +37,7 @@ pipeline {
             }
              post {
                  always {
-                     sh '''
-                         docker cp osv-scanner:/app/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
-                         docker stop osv-scanner
-                         docker rm osv-scanner
-                     '''
+                     sh 'docker run --rm -v $DATA_VOLUME:/data busybox cp /data/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json'
 //                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'OSV Scan',
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v ${WORKSPACE}:/app:rw \
+                        -v $DATA_VOLUME:/app \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
