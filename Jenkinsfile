@@ -64,10 +64,10 @@ pipeline {
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-//                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
-//                         productName: 'Juice Shop',
-//                         scanType: 'Trufflehog Scan',
-//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'Trufflehog Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
