@@ -23,24 +23,25 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v ${WORKSPACE}:/app:rw \
+                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/app/osv-json-report.json \
+                        --output=/app/osv/osv-json-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
+                         docker cp osv-scanner:/app/osv/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
                          docker stop osv-scanner
                          docker rm osv-scanner
-                        '''
-//                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
-//                         productName: 'Juice Shop',
-//                         scanType: 'OSV Scan',
-//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                     '''
+                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'OSV Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
@@ -48,24 +49,25 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v ${WORKSPACE}:/app:rw \
+                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > ${WORKSPACE}/results/trufflehog-secret-scan-report.json \
+                        > trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
+                         cat trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-//                      defectDojoPublisher(artifact: 'trufflehog-secret-scan-report.json',
-//                         productName: 'Juice Shop',
-//                         scanType: 'Trufflehog Scan',
-//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                     defectDojoPublisher(artifact: 'trufflehog-secret-scan-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'Trufflehog Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
@@ -94,10 +96,10 @@ pipeline {
                         docker stop zap juice-shop
                         docker rm zap juice-shop
                     '''
-//                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
-//                        productName: 'Juice Shop',
-//                        scanType: 'ZAP Scan',
-//                        engagementName: 'piotr.tyrala.mail@gmail.com')
+                    defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
+                       productName: 'Juice Shop',
+                       scanType: 'ZAP Scan',
+                       engagementName: 'piotr.tyrala.mail@gmail.com')
                 }
             }
         }
