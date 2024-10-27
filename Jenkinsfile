@@ -23,7 +23,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v ${WORKSPACE}:/app:ro \
+                        -v ${WORKSPACE}:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
@@ -48,7 +48,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v ${WORKSPACE}:/app:ro \
+                        -v ${WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
