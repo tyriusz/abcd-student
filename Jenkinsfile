@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v /var/jenkins_home/workspace/ABCD-DEVSECOPS-TRAINING:/app:rw \
+                        -v ${WORKSPACE}:/app \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
