@@ -16,7 +16,6 @@ pipeline {
             steps {
                 echo 'Hello!!'
                 sh 'whoami'
-                sh 'mkdir -p reports/'
                 sh 'mkdir -p results/'
             }
         }
@@ -54,14 +53,13 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > trufflehog-secret-scan-report.json \
+                        > ${WORKSPACE}/results/trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
              post {
                  always {
                      sh '''
-                         cat trufflehog-secret-scan-report.json
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
