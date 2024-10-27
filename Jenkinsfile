@@ -16,6 +16,7 @@ pipeline {
             steps {
                 echo 'Hello!!'
                 sh 'whoami'
+                sh 'mkdir -p reports/'
                 sh 'mkdir -p results/'
             }
         }
