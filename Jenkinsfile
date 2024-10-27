@@ -9,8 +9,6 @@ pipeline {
                 script {
                     cleanWs()
                     git credentialsId: 'github-student', url: 'https://github.com/tyriusz/abcd-student', branch: 'main'
-                    sh 'docker run --rm -v ${WORKSPACE}:/source -v $DATA_VOLUME:/data busybox cp -r /source/. /data/'
-                    sh 'docker run --rm -v $DATA_VOLUME:/data busybox ls -la /data'
                 }
             }
         }
