@@ -76,7 +76,7 @@ pipeline {
                 sh '''
                     docker run --name semgrep \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
-                        returntocorp/semgrep \
+                        returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
                         --output=/app/semgrep-json-report.json \
