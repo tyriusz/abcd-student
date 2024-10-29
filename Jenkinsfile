@@ -71,32 +71,32 @@ pipeline {
                  }
              }
         }
-        stage('[Semgrep] Repository static scan') {
-            steps {
-                sh '''
-                    docker run --name semgrep \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
-                        returntocorp/semgrep semgrep \
-                        --config=auto /app \
-                        --json \
-                        --output=/app/semgrep-json-report.json \
-                        || true
-                '''
-            }
-            post {
-                always {
-                    sh '''
-                        docker cp semgrep:/app/semgrep-json-report.json ${WORKSPACE}/results/semgrep-json-report.json
-                        docker stop semgrep
-                        docker rm semgrep
-                    '''
-                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Semgrep JSON Report',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
-                }
-            }
-        }
+//         stage('[Semgrep] Repository static scan') {
+//             steps {
+//                 sh '''
+//                     docker run --name semgrep \
+//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+//                         returntocorp/semgrep semgrep \
+//                         --config=auto /app \
+//                         --json \
+//                         --output=/app/semgrep-json-report.json \
+//                         || true
+//                 '''
+//             }
+//             post {
+//                 always {
+//                     sh '''
+//                         docker cp semgrep:/app/semgrep-json-report.json ${WORKSPACE}/results/semgrep-json-report.json
+//                         docker stop semgrep
+//                         docker rm semgrep
+//                     '''
+//                      defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Semgrep JSON Report',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+//                 }
+//             }
+//         }
          stage('[ZAP] Baseline passive-scan') {
              steps {
                  sh '''
