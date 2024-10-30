@@ -78,6 +78,7 @@ pipeline {
             }
             post {
                 always {
+                    sh 'cat semgrep-json-report.json'
 //                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Semgrep JSON Report',
