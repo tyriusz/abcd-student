@@ -28,7 +28,7 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > trufflehog-secret-scan-report.json \
+                        > results/trufflehog-secret-scan-report.json \
                         || true
                 '''
             }
@@ -47,9 +47,9 @@ pipeline {
                     docker run --rm \
                         -v "${WORKSPACE_DIR}":/app \
                         ghcr.io/google/osv-scanner:latest \
-                        --lockfile=package-lock.json \
+                        --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=osv-json-report.json \
+                        --output=/app/results/osv-json-report.json \
                         || true
                 '''
             }
@@ -70,7 +70,7 @@ pipeline {
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=semgrep-json-report.json \
+                        --output=/app/results/semgrep-json-report.json \
                         || true
                 '''
             }
