@@ -92,7 +92,7 @@ pipeline {
                     sleep 5
                 '''
                 sh '''
-                    docker run --name zap --rm \
+                    docker run --name zap \
                         --add-host=host.docker.internal:host-gateway \
                         -v "${WORKSPACE_DIR}/.zap":/zap/wrk/:rw \
                         ghcr.io/zaproxy/zaproxy:stable bash -c \
