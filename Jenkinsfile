@@ -32,15 +32,14 @@ pipeline {
                         || true
                 '''
             }
-            post {
-                always {
-                    sh 'cat results/trufflehog-secret-scan-report.json'
+//             post {
+//                 always {
 //                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Trufflehog Scan',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
-                }
-            }
+//                 }
+//             }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
@@ -54,15 +53,14 @@ pipeline {
                         || true
                 '''
             }
-            post {
-                always {
-                    sh 'cat osv-json-report.json'
+//             post {
+//                 always {
 //                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'OSV Scan',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
-                }
-            }
+//                 }
+//             }
         }
         stage('[Semgrep] Repository static scan') {
             steps {
@@ -76,15 +74,14 @@ pipeline {
                         || true
                 '''
             }
-            post {
-                always {
-                    sh 'cat semgrep-json-report.json'
+//             post {
+//                 always {
 //                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Semgrep JSON Report',
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
-                }
-            }
+//                 }
+//             }
         }
         stage('[ZAP] Baseline passive-scan') {
             steps {
