@@ -28,7 +28,7 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        > results/trufflehog-secret-scan-report.json \
+                        > trufflehog-secret-scan-report.json \
                         || true
                 '''
             }
@@ -50,13 +50,13 @@ pipeline {
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/app/osv-json-report.json \
+                        --output=osv-json-report.json \
                         || true
                 '''
             }
             post {
                 always {
-                    sh 'cat results/osv-json-report.json'
+                    sh 'cat osv-json-report.json'
 //                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'OSV Scan',
@@ -72,13 +72,12 @@ pipeline {
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=/app/semgrep-json-report.json \
+                        --output=semgrep-json-report.json \
                         || true
                 '''
             }
             post {
                 always {
-                    sh 'cat results/semgrep-json-report.json'
 //                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
 //                         productName: 'Juice Shop',
 //                         scanType: 'Semgrep JSON Report',
