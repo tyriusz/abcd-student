@@ -3,6 +3,9 @@ pipeline {
     options {
         skipDefaultCheckout(true)
     }
+    environment {
+        WORKSPACE_DIR = "${env.WORKSPACE}"
+    }
     stages {
         stage('Code checkout from GitHub main') {
             steps {
@@ -20,112 +23,101 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh '''
-                    docker run --name trufflehog \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                    docker run --rm \
+                        -v "${WORKSPACE_DIR}":/app \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
                         > results/trufflehog-secret-scan-report.json \
                         || true
-                    '''
+                '''
             }
-             post {
-                 always {
-                     sh '''
-                         cat results/trufflehog-secret-scan-report.json
-                         docker stop trufflehog
-                         docker rm trufflehog
-                        '''
-                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Trufflehog Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
-                 }
-             }
+            post {
+                always {
+                    sh 'cat results/trufflehog-secret-scan-report.json'
+//                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Trufflehog Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                }
+            }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
                 sh '''
-                    docker run --name osv-scanner \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                    docker run --rm \
+                        -v "${WORKSPACE_DIR}":/app \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/app/osv-json-report.json \
+                        --output=/app/results/osv-json-report.json \
                         || true
-                    '''
+                '''
             }
-             post {
-                 always {
-                     sh '''
-                         docker cp osv-scanner:/app/osv-json-report.json ${WORKSPACE}/results/osv-json-report.json
-                         docker stop osv-scanner
-                         docker rm osv-scanner
-                     '''
-                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'OSV Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
-                 }
-             }
+            post {
+                always {
+                    sh 'cat results/osv-json-report.json'
+//                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'OSV Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                }
+            }
         }
         stage('[Semgrep] Repository static scan') {
             steps {
                 sh '''
-                    docker run --name semgrep \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                    docker run --rm \
+                        -v "${WORKSPACE_DIR}":/app \
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=/app/semgrep-json-report.json \
+                        --output=/app/results/semgrep-json-report.json \
+                        || true
+                '''
+            }
+            post {
+                always {
+                    sh 'cat results/semgrep-json-report.json'
+//                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Semgrep JSON Report',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                }
+            }
+        }
+        stage('[ZAP] Baseline passive-scan') {
+            steps {
+                sh '''
+                    docker run --name juice-shop -d \
+                        -p 3000:3000 \
+                        bkimminich/juice-shop
+                    sleep 5
+                '''
+                sh '''
+                    docker run --name zap --rm \
+                        --add-host=host.docker.internal:host-gateway \
+                        -v "${WORKSPACE_DIR}/.zap":/zap/wrk/:rw \
+                        ghcr.io/zaproxy/zaproxy:stable bash -c \
+                        "zap.sh -cmd -addonupdate; \
+                         zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
                         || true
                 '''
             }
             post {
                 always {
                     sh '''
-                        docker cp semgrep:/app/semgrep-json-report.json ${WORKSPACE}/results/semgrep-json-report.json
-                        docker stop semgrep
-                        docker rm semgrep
+                        docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE_DIR}/results/zap_html_report.html || true
+                        docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE_DIR}/results/zap_xml_report.xml || true
+                        docker stop zap juice-shop || true
+                        docker rm zap juice-shop || true
                     '''
-                     defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Semgrep JSON Report',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
+//                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
+//                         productName: 'Juice Shop',
+//                         scanType: 'ZAP Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
                 }
             }
         }
-         stage('[ZAP] Baseline passive-scan') {
-             steps {
-                 sh '''
-                     docker run --name juice-shop -d \
-                         -p 3000:3000 \
-                         bkimminich/juice-shop
-                     sleep 5
-                 '''
-                 sh '''
-                     docker run --name zap \
-                         --add-host=host.docker.internal:host-gateway \
-                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/.zap:/zap/wrk/:rw \
-                         -t ghcr.io/zaproxy/zaproxy:stable bash -c \
-                         "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
-                         || true
-                 '''
-             }
-             post {
-                 always {
-                     sh '''
-                         docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
-                         docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
-                         docker stop zap juice-shop
-                         docker rm zap juice-shop
-                     '''
-                     defectDojoPublisher(artifact: 'results/zap_xml_report.xml',
-                        productName: 'Juice Shop',
-                        scanType: 'ZAP Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
-                 }
-             }
-         }
     }
 }
