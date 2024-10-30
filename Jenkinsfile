@@ -46,10 +46,11 @@ pipeline {
                 sh '''
                     docker run --rm \
                         -v "${WORKSPACE_DIR}":/app \
+                        -w /app \
                         ghcr.io/google/osv-scanner:latest \
-                        --lockfile=/app/package-lock.json \
+                        --lockfile=package-lock.json \
                         --format=json \
-                        --output=/app/results/osv-json-report.json \
+                        --output=results/osv-json-report.json \
                         || true
                 '''
             }
