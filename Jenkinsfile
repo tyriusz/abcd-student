@@ -19,11 +19,12 @@ pipeline {
             agent {
                 docker {
                     image 'trufflesecurity/trufflehog:latest'
-                    args '-u root' // Jeśli potrzebne uprawnienia root
+                    args '--entrypoint= -u root' // Wyłączenie ENTRYPOINT i ustawienie użytkownika root
                 }
             }
             steps {
                 sh '''
+                    mkdir -p results/
                     trufflehog filesystem . -j > results/trufflehog-secret-scan-report.json || true
                 '''
             }
@@ -32,11 +33,12 @@ pipeline {
             agent {
                 docker {
                     image 'ghcr.io/google/osv-scanner:latest'
-                    args '-u root' // Jeśli potrzebne uprawnienia root
+                    args '--entrypoint= -u root' // Wyłączenie ENTRYPOINT i ustawienie użytkownika root
                 }
             }
             steps {
                 sh '''
+                    mkdir -p results/
                     osv-scanner --lockfile=package-lock.json \
                                 --format=json \
                                 --output=results/osv-json-report.json \
@@ -48,11 +50,12 @@ pipeline {
             agent {
                 docker {
                     image 'returntocorp/semgrep'
-                    args '-u root' // Jeśli potrzebne uprawnienia root
+                    args '--entrypoint= -u root' // Wyłączenie ENTRYPOINT i ustawienie użytkownika root
                 }
             }
             steps {
                 sh '''
+                    mkdir -p results/
                     semgrep --config=auto . \
                             --json \
                             --output=results/semgrep-json-report.json \
@@ -64,7 +67,7 @@ pipeline {
             agent {
                 docker {
                     image 'ghcr.io/zaproxy/zaproxy:stable'
-                    args '--network host -u root'
+                    args '--entrypoint= --network host -u root'
                 }
             }
             steps {
@@ -92,6 +95,7 @@ pipeline {
                         zap-cli --zap-url http://localhost:8090 open-url http://localhost:3000
                         zap-cli --zap-url http://localhost:8090 spider http://localhost:3000
                         zap-cli --zap-url http://localhost:8090 active-scan http://localhost:3000
+                        mkdir -p results/
                         zap-cli --zap-url http://localhost:8090 report -o results/zap_html_report.html -f html
                         zap-cli --zap-url http://localhost:8090 report -o results/zap_xml_report.xml -f xml
                         zap.sh -cmd -shutdown
