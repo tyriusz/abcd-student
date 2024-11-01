@@ -19,7 +19,7 @@ pipeline {
         }
         stage('[TruffleHog] Secret scan') {
             steps {
-                sh 'trufflehog filesystem / -j > results/trufflehog-secret-scan-report.json || true'
+                sh 'trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
             }
 //              post {
 //                  always {
