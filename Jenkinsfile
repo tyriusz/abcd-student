@@ -25,7 +25,6 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        ls /app \
                         > results/trufflehog-secret-scan-report.json \
                         || true
                     '''
@@ -34,7 +33,6 @@ pipeline {
                  always {
                      sh '''
                          docker stop trufflehog
-                         docker rm trufflehog
                         '''
 //                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
 //                         productName: 'Juice Shop',
