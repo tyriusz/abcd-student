@@ -17,19 +17,10 @@ pipeline {
                 sh 'mkdir -p results/'
             }
         }
-//         stage('[TruffleHog] Secret scan') {
-//             steps {
-//                 sh '''
-//                     docker run --name trufflehog \
-//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
-//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
-//                         trufflesecurity/trufflehog:latest \
-//                         filesystem /app \
-//                         -j \
-//                         > results/trufflehog-secret-scan-report.json \
-//                         || true
-//                     '''
-//             }
+        stage('[TruffleHog] Secret scan') {
+            steps {
+                sh 'trufflehog filesystem / -j > results/trufflehog-secret-scan-report.json || true'
+            }
 //              post {
 //                  always {
 //                      sh '''
@@ -42,7 +33,7 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                  }
 //              }
-//         }
+        }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json || true'
