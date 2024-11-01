@@ -14,23 +14,27 @@ pipeline {
         }
         stage('[Prepare directory for test results]') {
             steps {
-                sh 'chmod -R a+rX ${WORKSPACE}'
                 sh 'mkdir -p results/'
             }
         }
-        stage('[TruffleHog] Secret scan') {
-            steps {
-                sh '''
-                    docker run --name trufflehog --user $(id -u):$(id -g) \
-                        -v ${WORKSPACE}:/app:rw \
-                        trufflesecurity/trufflehog:latest \
-                        filesystem /app -j \
-                        > results/trufflehog-secret-scan-report.json \
-                    '''
-            }
+//         stage('[TruffleHog] Secret scan') {
+//             steps {
+//                 sh '''
+//                     docker run --name trufflehog \
+//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
+//                         trufflesecurity/trufflehog:latest \
+//                         filesystem /app \
+//                         -j \
+//                         > results/trufflehog-secret-scan-report.json \
+//                         || true
+//                     '''
+//             }
 //              post {
 //                  always {
 //                      sh '''
+//                          docker stop trufflehog
+//                          docker rm trufflehog
 //                         '''
 //                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
 //                         productName: 'Juice Shop',
@@ -38,20 +42,11 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                  }
 //              }
-        }
-//         stage('[OSV-Scanner] Dependency scan') {
-//             steps {
-//                 sh '''
-//                     docker run --name osv-scanner \
-//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
-//                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
-//                         ghcr.io/google/osv-scanner:latest \
-//                         --lockfile=/app/package-lock.json \
-//                         --format=json \
-//                         --output=/results/osv-json-report.json \
-//                         || true
-//                     '''
-//             }
+//         }
+        stage('[OSV-Scanner] Dependency scan') {
+            steps {
+                sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${WORKSPACE}/results/osv-json-report.json' || true
+            }
 //              post {
 //                  always {
 //                      sh '''
@@ -65,7 +60,7 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                  }
 //              }
-//         }
+        }
 //         stage('[Semgrep] Repository static scan') {
 //             steps {
 //                 sh '''
