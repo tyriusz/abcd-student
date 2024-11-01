@@ -26,7 +26,6 @@ pipeline {
                         filesystem /app \
                         -j \
                         > results/trufflehog-secret-scan-report.json \
-                        || true
                     '''
             }
 //              post {
