@@ -22,10 +22,10 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v ${WORKSPACE}:/app:rw \
-                        ls -la /app \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
+                        ls -la /app \
                         > results/trufflehog-secret-scan-report.json \
                         || true
                     '''
