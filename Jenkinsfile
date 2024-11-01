@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v /var/jenkins_home/workspace/ABCD-DEVSECOPS-TRAINING:/app:rw \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v /var/jenkins_home/workspace/ABCD-DEVSECOPS-TRAINING:/app:rw \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
@@ -74,7 +74,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name semgrep \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student:/app:rw \
+                        -v /var/jenkins_home/workspace/ABCD-DEVSECOPS-TRAINING:/app:rw \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
@@ -108,7 +108,7 @@ pipeline {
                  sh '''
                      docker run --name zap \
                          --add-host=host.docker.internal:host-gateway \
-                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/abcd-student/.zap:/zap/wrk/:rw \
+                         -v /var/jenkins_home/workspace/ABCD-DEVSECOPS-TRAINING/.zap:/zap/wrk/:rw \
                          -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                          -t ghcr.io/zaproxy/zaproxy:stable bash -c \
                          "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
