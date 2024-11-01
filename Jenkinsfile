@@ -50,7 +50,7 @@ pipeline {
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/results/osv-json-report.json \
+                        --output=results/osv-json-report.json \
                         || true
                     '''
             }
@@ -75,7 +75,7 @@ pipeline {
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=/results/semgrep-json-report.json \
+                        --output=results/semgrep-json-report.json \
                         || true
                 '''
             }
