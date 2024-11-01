@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name semgrep \
-                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
@@ -103,7 +103,7 @@ pipeline {
                  sh '''
                      docker run --name zap \
                          --add-host=host.docker.internal:host-gateway \
-                         -v abcd-lab:/var/jenkins_home/workspace/devsecops-training/.zap:/zap/wrk/:rw \
+                         -v /var/jenkins_home/workspace/devsecops-training/.zap:/zap/wrk/:rw \
                          -t ghcr.io/zaproxy/zaproxy:stable bash -c \
                          "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
                          || true
