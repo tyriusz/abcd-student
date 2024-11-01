@@ -23,7 +23,7 @@ pipeline {
                     docker run --name trufflehog \
                         -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app \
+                        filesystem app \
                         -j \
                         > results/trufflehog-secret-scan-report.json \
                         || true
@@ -50,7 +50,7 @@ pipeline {
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=package-lock.json \
                         --format=json \
-                        --output=/results/osv-json-report.json \
+                        --output=app/results/osv-json-report.json \
                         || true
                     '''
             }
