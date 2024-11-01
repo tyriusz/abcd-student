@@ -23,7 +23,7 @@ pipeline {
                     docker run --name trufflehog \
                         -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem / \
+                        filesystem /app \
                         -j \
                         > results/trufflehog-secret-scan-report.json \
                         || true
