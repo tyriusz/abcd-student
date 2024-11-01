@@ -14,6 +14,7 @@ pipeline {
         }
         stage('[Prepare directory for test results]') {
             steps {
+                sh 'chmod -R a+rX ${WORKSPACE}'
                 sh 'mkdir -p results/'
             }
         }
