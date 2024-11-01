@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
@@ -47,12 +47,12 @@ pipeline {
             steps {
                 sh '''
                     docker run --name osv-scanner \
-                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
                         -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=/var/jenkins_home/workspace/devsecops-training/results/osv-json-report.json \
+                        --output=abcd-lab:/var/jenkins_home/workspace/devsecops-training/results/osv-json-report.json \
                         || true
                     '''
             }
@@ -73,11 +73,11 @@ pipeline {
             steps {
                 sh '''
                     docker run --name semgrep \
-                        -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
+                        -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=/var/jenkins_home/workspace/devsecops-training/results/semgrep-json-report.json \
+                        --output=abcd-lab:/var/jenkins_home/workspace/devsecops-training/results/semgrep-json-report.json \
                         || true
                 '''
             }
@@ -105,7 +105,7 @@ pipeline {
                  sh '''
                      docker run --name zap \
                          --add-host=host.docker.internal:host-gateway \
-                         -v /var/jenkins_home/workspace/devsecops-training/.zap:/zap/wrk/:rw \
+                         -v abcd-lab:/var/jenkins_home/workspace/devsecops-training/.zap:/zap/wrk/:rw \
                          -t ghcr.io/zaproxy/zaproxy:stable bash -c \
                          "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
                          || true
