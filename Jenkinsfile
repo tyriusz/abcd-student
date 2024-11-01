@@ -21,7 +21,7 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh '''
-                    docker run --name trufflehog -d \
+                    docker run --name trufflehog \
                         -v ${WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
