@@ -22,6 +22,7 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v ${WORKSPACE}:/app:rw \
+                        ls l
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
