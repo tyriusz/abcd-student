@@ -48,9 +48,9 @@ pipeline {
                     docker run --name osv-scanner \
                         -v /var/jenkins_home/workspace/devsecops-training:/app:rw \
                         ghcr.io/google/osv-scanner:latest \
-                        --lockfile=/app/package-lock.json \
+                        --lockfile=package-lock.json \
                         --format=json \
-                        --output=/app/results/osv-json-report.json \
+                        --output=/var/jenkins_home/workspace/devsecops-training/results/osv-json-report.json \
                         || true
                     '''
             }
