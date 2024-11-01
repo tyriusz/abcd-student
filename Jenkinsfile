@@ -45,7 +45,7 @@ pipeline {
         }
         stage('[Semgrep] Repository static scan') {
             steps {
-                sh 'semgrep --config=auto ${WORKSPACE} --json --output=/results/semgrep-json-report.json || true'
+                sh 'semgrep --config=auto ${WORKSPACE} --json --output=${WORKSPACE}/results/semgrep-json-report.json || true'
             }
 //             post {
 //                 always {
