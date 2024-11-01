@@ -22,7 +22,6 @@ pipeline {
                 sh '''
                     docker run --name trufflehog \
                         -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
@@ -48,11 +47,10 @@ pipeline {
                 sh '''
                     docker run --name osv-scanner \
                         -v abcd-lab:/var/jenkins_home/workspace/devsecops-training:/app:rw \
-                        -v /c/Users/Piotrek/Documents/abcd-devsecops/working/results:/results:rw \
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=/app/package-lock.json \
                         --format=json \
-                        --output=abcd-lab:/var/jenkins_home/workspace/devsecops-training/results/osv-json-report.json \
+                        --output=/results/osv-json-report.json \
                         || true
                     '''
             }
@@ -77,7 +75,7 @@ pipeline {
                         returntocorp/semgrep semgrep \
                         --config=auto /app \
                         --json \
-                        --output=abcd-lab:/var/jenkins_home/workspace/devsecops-training/results/semgrep-json-report.json \
+                        --output=/results/semgrep-json-report.json \
                         || true
                 '''
             }
