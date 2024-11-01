@@ -23,9 +23,8 @@ pipeline {
                     docker run --name trufflehog \
                         -v ${WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app \
-                        -j \
-                        > results/trufflehog-secret-scan-report.json \
+                        filesystem /app -j \
+                        --output /app/results/trufflehog-secret-scan-report.json \
                         || true
                     '''
             }
