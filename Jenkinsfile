@@ -50,7 +50,7 @@ pipeline {
                         ghcr.io/google/osv-scanner:latest \
                         --lockfile=package-lock.json \
                         --format=json \
-                        --output=/var/jenkins_home/workspace/devsecops-training/results/osv-json-report.json \
+                        --output=/app/results/osv-json-report.json \
                         || true
                     '''
             }
