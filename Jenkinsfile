@@ -20,12 +20,10 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh """
-                    docker run --name trufflehog \
-                        -v "${env.WORKSPACE}:/app:rw" \
+                    docker run --rm \
+                        -v "${env.WORKSPACE}:/app" \
                         trufflesecurity/trufflehog:latest \
-                        filesystem /app \
-                        -j \
-                        --output /app/results/trufflehog-secret-scan-report.json
+                        sh -c "trufflehog filesystem /app -j > /app/results/trufflehog-secret-scan-report.json"
                 """
             }
 
