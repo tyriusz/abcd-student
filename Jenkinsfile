@@ -29,7 +29,7 @@ pipeline {
                         --output /app/results/trufflehog-secret-scan-report.json
                 """
             }
-        }
+
              post {
                  always {
                      sh '''
