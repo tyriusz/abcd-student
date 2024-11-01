@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --name trufflehog \
-                        -v ${env.WORKSPACE}:/app:rw \
+                        -v ${WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
@@ -35,10 +35,10 @@ pipeline {
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
-                        productName: 'Juice Shop',
-                        scanType: 'Trufflehog Scan',
-                        engagementName: 'piotr.tyrala.mail@gmail.com')
+//                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
+//                         productName: 'Juice Shop',
+//                         scanType: 'Trufflehog Scan',
+//                         engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
