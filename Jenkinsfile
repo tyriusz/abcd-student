@@ -19,25 +19,26 @@ pipeline {
         }
         stage('[TruffleHog] Secret scan') {
             steps {
-                sh """
-                    docker run --rm \
-                        -v "${env.WORKSPACE}:/app" \
+                sh '''
+                    docker run --name trufflehog \
+                        -v ${env.WORKSPACE}:/app:rw \
                         trufflesecurity/trufflehog:latest \
-                        trufflehog filesystem /app -j \
-                        > /app/results/trufflehog-secret-scan-report.json
-                """
+                        filesystem /app \
+                        -j \
+                        > results/trufflehog-secret-scan-report.json \
+                        || true
+                    '''
             }
-
              post {
                  always {
                      sh '''
                          docker stop trufflehog
                          docker rm trufflehog
                         '''
-//                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
-//                         productName: 'Juice Shop',
-//                         scanType: 'Trufflehog Scan',
-//                         engagementName: 'piotr.tyrala.mail@gmail.com')
+                     defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
+                        productName: 'Juice Shop',
+                        scanType: 'Trufflehog Scan',
+                        engagementName: 'piotr.tyrala.mail@gmail.com')
                  }
              }
         }
@@ -128,5 +129,5 @@ pipeline {
 //                  }
 //              }
 //          }
-     }
+    }
 }
