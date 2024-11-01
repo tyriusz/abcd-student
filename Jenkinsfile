@@ -25,7 +25,7 @@ pipeline {
                         trufflesecurity/trufflehog:latest \
                         filesystem /app \
                         -j \
-                        ls -la /app \
+                        ls /app \
                         > results/trufflehog-secret-scan-report.json \
                         || true
                     '''
