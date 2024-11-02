@@ -32,11 +32,11 @@ pipeline {
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json || true'
+                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-json-report.json || true'
             }
              post {
                  always {
-                     defectDojoPublisher(artifact: 'results/osv-json-report.json',
+                     defectDojoPublisher(artifact: 'results/sca-osv-json-report.json',
                         productName: 'Juice Shop',
                         scanType: 'OSV Scan',
                         engagementName: 'piotr.tyrala.mail@gmail.com')
