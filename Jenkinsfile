@@ -12,15 +12,15 @@ pipeline {
                 }
             }
         }
-        stage('[Prepare directory for test results]') {
-            steps {
-                sh 'mkdir -p results/'
-            }
-        }
-        stage('[TruffleHog] Secret scan') {
-            steps {
-                sh 'trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
-            }
+//         stage('[Prepare directory for test results]') {
+//             steps {
+//                 sh 'mkdir -p results/'
+//             }
+//         }
+//         stage('[TruffleHog] Secret scan') {
+//             steps {
+//                 sh 'trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
+//             }
 //              post {
 //                  always {
 //                      defectDojoPublisher(artifact: 'results/trufflehog-secret-scan-report.json',
@@ -29,11 +29,11 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                  }
 //              }
-        }
-        stage('[OSV-Scanner] Dependency scan') {
-            steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json || true'
-            }
+//         }
+//         stage('[OSV-Scanner] Dependency scan') {
+//             steps {
+//                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json || true'
+//             }
 //              post {
 //                  always {
 //                      defectDojoPublisher(artifact: 'results/osv-json-report.json',
@@ -42,11 +42,11 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                  }
 //              }
-        }
-        stage('[Semgrep] Repository static scan') {
-            steps {
-                sh 'semgrep --config=auto ${WORKSPACE} --json --output=${WORKSPACE}/results/semgrep-json-report.json || true'
-            }
+//         }
+//         stage('[Semgrep] Repository static scan') {
+//             steps {
+//                 sh 'semgrep --config=auto ${WORKSPACE} --json --output=${WORKSPACE}/results/semgrep-json-report.json || true'
+//             }
 //             post {
 //                 always {
 //                      defectDojoPublisher(artifact: 'results/semgrep-json-report.json',
@@ -55,7 +55,7 @@ pipeline {
 //                         engagementName: 'piotr.tyrala.mail@gmail.com')
 //                 }
 //             }
-        }
+//         }
          stage('[ZAP] Baseline passive-scan') {
              steps {
                  sh '''
@@ -76,8 +76,8 @@ pipeline {
              post {
                  always {
                      sh '''
-                         docker cp zap:/results/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
-                         docker cp zap:/results/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
+                         docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
+                         docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
                          docker stop zap juice-shop
                          docker rm zap juice-shop
                      '''
