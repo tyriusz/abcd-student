@@ -18,4 +18,4 @@ def convert_trufflehog_to_junit(json_file, xml_file):
     tree.write(xml_file, encoding='utf-8', xml_declaration=True)
 
 if __name__ == '__main__':
-    convert_trufflehog_to_junit('/results/trufflehog-secret-scan-report.json', '/results/trufflehog-secret-scan-report.xml')
+    convert_trufflehog_to_junit('results/trufflehog-secret-scan-report.json', 'results/trufflehog-secret-scan-report.xml')
