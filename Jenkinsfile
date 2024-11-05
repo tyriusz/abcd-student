@@ -20,7 +20,7 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh '''
-                trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
+                trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true
                 python scripts/convert_trufflehog_to_junit.py
                 '''
             }
