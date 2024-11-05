@@ -19,17 +19,17 @@ pipeline {
         }
         stage('[TruffleHog] Secret scan') {
             steps {
-                sh 'trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
+                sh 'trufflehog filesystem ${WORKSPACE} --format sarif > results/trufflehog-secret-scan-report.sarif || true'
             }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-json-report.json || true'
+                sh 'osv-scanner scan --lockfile package-lock.json --format sarif --output results/sca-osv-report.sarif || true'
             }
         }
         stage('[Semgrep] Repository static scan') {
             steps {
-                sh 'semgrep --config=auto ${WORKSPACE} --json --output=${WORKSPACE}/results/semgrep-json-report.json || true'
+                sh 'semgrep --config=auto ${WORKSPACE} --sarif --output=${WORKSPACE}/results/semgrep-report.sarif || true'
             }
         }
          stage('[ZAP] Baseline passive-scan') {
