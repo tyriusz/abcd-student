@@ -19,10 +19,7 @@ pipeline {
         }
         stage('[TruffleHog] Secret scan') {
             steps {
-                sh '''
-                trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true
-                python scripts/convert_trufflehog_to_junit.py
-                '''
+                sh 'trufflehog filesystem ${WORKSPACE} -j > results/trufflehog-secret-scan-report.json || true'
             }
         }
         stage('[OSV-Scanner] Dependency scan') {
