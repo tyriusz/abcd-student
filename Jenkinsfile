@@ -21,6 +21,11 @@ pipeline {
             steps {
                 sh 'trufflehog filesystem ${WORKSPACE} --json > results/trufflehog-secret-scan-report.json || true'
             }
+            post {
+                always {
+                    recordIssues tools: [truffleHog(pattern: '**/results/trufflehog-secret-scan-report.json')]
+                }
+            }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
