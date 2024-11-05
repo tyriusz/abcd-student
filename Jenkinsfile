@@ -20,10 +20,11 @@ pipeline {
         stage('[TruffleHog] Secret scan') {
             steps {
                 sh 'trufflehog filesystem ${WORKSPACE} --json > results/trufflehog-secret-scan-report.json || true'
+                python scripts/convert_trufflehog_to_junit.py
             }
             post {
                 always {
-                    recordIssues tools: [truffleHog(pattern: '**/results/trufflehog-secret-scan-report.json')]
+                    junit 'results/trufflehog-secret-scan-report.xml'
                 }
             }
         }
