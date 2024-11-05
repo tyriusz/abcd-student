@@ -24,25 +24,15 @@ pipeline {
                 python scripts/convert_trufflehog_to_junit.py
                 '''
             }
-            post {
-                always {
-                    junit 'results/trufflehog-secret-scan-report.xml'
-                }
-            }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
                 sh 'osv-scanner scan --lockfile package-lock.json --format sarif --output results/sca-osv-report.sarif || true'
             }
-            post {
-                always {
-                    publishSarif sarifFilePaths: '**/results/sca-osv-report.sarif'
-                }
-            }
         }
         stage('[Semgrep] Repository static scan') {
             steps {
-                sh 'semgrep --config=auto ${WORKSPACE} --sarif --output=${WORKSPACE}/results/semgrep-report.sarif || true'
+                sh 'semgrep --config=auto ${WORKSPACE} --sarif --output=results/semgrep-report.sarif || true'
             }
             post {
                 always {
@@ -78,6 +68,18 @@ pipeline {
                       recordIssues tools: [sarif(pattern: '**/results/zap_html_report.html')]
                  }
              }
+         }
+         post {
+             always {
+                 recordIssues(
+                     tools: [
+                         sarif(name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
+                         sarif(name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif'),
+                         sarif(name: 'Semgrep', pattern: '**/results/semgrep-report.sarif'),
+                         sarif(name: 'OWASP ZAP', pattern: '**/results/zap_xml_report.xml')
+                     ]
+                 )
+              }
          }
     }
 }
