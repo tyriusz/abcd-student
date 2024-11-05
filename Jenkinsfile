@@ -19,17 +19,27 @@ pipeline {
         }
         stage('[TruffleHog] Secret scan') {
             steps {
-                sh 'trufflehog filesystem ${WORKSPACE} --format sarif > results/trufflehog-secret-scan-report.sarif || true'
+                sh 'trufflehog filesystem ${WORKSPACE} --json > results/trufflehog-secret-scan-report.json || true'
             }
         }
         stage('[OSV-Scanner] Dependency scan') {
             steps {
                 sh 'osv-scanner scan --lockfile package-lock.json --format sarif --output results/sca-osv-report.sarif || true'
             }
+            post {
+                always {
+                    publishSarif sarifFilePaths: '**/results/sca-osv-report.sarif'
+                }
+            }
         }
         stage('[Semgrep] Repository static scan') {
             steps {
                 sh 'semgrep --config=auto ${WORKSPACE} --sarif --output=${WORKSPACE}/results/semgrep-report.sarif || true'
+            }
+            post {
+                always {
+                    recordIssues tools: [sarif(pattern: '**/results/semgrep-report.sarif')]
+                }
             }
         }
          stage('[ZAP] Baseline passive-scan') {
@@ -57,6 +67,7 @@ pipeline {
                          docker stop zap juice-shop
                          docker rm zap juice-shop
                      '''
+                      recordIssues tools: [sarif(pattern: '**/results/zap_html_report.html')]
                  }
              }
          }
