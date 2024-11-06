@@ -58,7 +58,7 @@ pipeline {
                  always {
                      sh '''
                          docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
-                         docker cp zap:/zap/wrk/zap_sarif_report.sarif ${WORKSPACE}/results/zap_sarif_report.sarif
+                         docker cp zap:/zap/wrk/zap_sarif_report.json ${WORKSPACE}/results/zap_sarif_report.json
                          docker stop zap juice-shop
                          docker rm zap juice-shop
                      '''
@@ -73,7 +73,7 @@ pipeline {
 //                              sarif(id: 'Trufflehog', name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
                              sarif(id: 'Semgrep', name: 'Semgrep', pattern: '**/results/semgrep-report.sarif'),
                              sarif(id: 'OSV-Scanner', name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif'),
-                             sarif(id: 'ZAP', name: 'OWASP ZAP', pattern: '**/results/zap_sarif_report.sarif')
+                             sarif(id: 'ZAP', name: 'OWASP ZAP', pattern: '**/results/zap_sarif_report.json')
                          ]
                      )
                   }
