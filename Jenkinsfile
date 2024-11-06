@@ -71,10 +71,10 @@ pipeline {
                  always {
                      recordIssues(
                          tools: [
-                             sarif(id: 'Trufflehog', name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
+//                              sarif(id: 'Trufflehog', name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
                              sarif(id: 'Semgrep', name: 'Semgrep', pattern: '**/results/semgrep-report.sarif'),
-                             sarif(id: 'OSV-Scanner', name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif')
-//                              zap(id: 'zap', name: 'OWASP ZAP', pattern: '**/results/zap_xml_report.xml')
+                             sarif(id: 'OSV-Scanner', name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif'),
+                             zap(id: 'zap', name: 'OWASP ZAP', pattern: '**/results/zap_xml_report.xml')
                          ]
                      )
                   }
