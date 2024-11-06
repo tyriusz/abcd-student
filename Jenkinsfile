@@ -59,8 +59,6 @@ pipeline {
                      sh '''
                          docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
                          docker cp zap:/zap/wrk/zap_sarif_report.json ${WORKSPACE}/results/zap_sarif_report.json
-//                          docker stop zap juice-shop
-//                          docker rm zap juice-shop
                      '''
                  }
              }
