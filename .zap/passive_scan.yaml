@@ -40,5 +40,5 @@ jobs:
     parameters:
       template: sarif
       reportDir: /zap/wrk
-      reportFile: zap_xml_report
+      reportFile: zap_sarif_report
       reportTitle: "ZAP Passive Scan Report"
