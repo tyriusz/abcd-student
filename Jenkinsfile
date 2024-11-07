@@ -58,7 +58,7 @@ pipeline {
                  always {
                      sh '''
                          docker cp zap:/zap/wrk/zap_html_report.html ${WORKSPACE}/results/zap_html_report.html
-                         docker cp zap:/zap/wrk/zap_sarif_report.json ${WORKSPACE}/results/zap_sarif_report.json
+                         docker cp zap:/zap/wrk/zap_xml_report.xml ${WORKSPACE}/results/zap_xml_report.xml
                      '''
                  }
              }
@@ -71,7 +71,8 @@ pipeline {
 //                              sarif(id: 'Trufflehog', name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
                              sarif(id: 'Semgrep', name: 'Semgrep', pattern: '**/results/semgrep-report.sarif'),
                              sarif(id: 'OSV-Scanner', name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif'),
-                             sarif(id: 'ZAP', name: 'OWASP ZAP', pattern: '**/results/zap_sarif_report.json')
+                             analysisParser(id: 'ZAP', name: 'OWASP ZAP', parserName: 'OWASP Zap', pattern: '**/results/zap_xml_report.xml')
+//                              sarif(id: 'ZAP', name: 'OWASP ZAP', pattern: '**/results/zap_sarif_report.json')
                          ]
                      )
                   }
