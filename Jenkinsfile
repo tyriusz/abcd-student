@@ -71,7 +71,7 @@ pipeline {
 //                              sarif(id: 'Trufflehog', name: 'Trufflehog', pattern: '**/results/trufflehog-secret-scan-report.json'),
                              sarif(id: 'Semgrep', name: 'Semgrep', pattern: '**/results/semgrep-report.sarif'),
                              sarif(id: 'OSV-Scanner', name: 'OSV-Scanner', pattern: '**/results/sca-osv-report.sarif'),
-                             analysisParser(id: 'ZAP', name: 'OWASP ZAP', parserName: 'OWASP Zap', pattern: '**/results/zap_xml_report.xml')
+                             analysisParser(id: 'ZAP', name: 'OWASP ZAP', parser: 'OwaspZap', pattern: '**/results/zap_xml_report.xml')
 //                              sarif(id: 'ZAP', name: 'OWASP ZAP', pattern: '**/results/zap_sarif_report.json')
                          ]
                      )
